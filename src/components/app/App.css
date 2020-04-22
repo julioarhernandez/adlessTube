@@ -2,3 +2,9 @@
 body{
   font-family: 'Roboto', sans-serif;
 }
+.text-medium{
+  font-size: 0.8rem;
+}
+.text-small{
+  font-size: 0.7rem;
+}
