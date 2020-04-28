@@ -2,7 +2,14 @@ import React from 'react';
 import {VideoItemWrapper} from "./styles";
 import theDate from "../../utils/date";
 
-const VideoItem = ({id, title, img, channel, date, duration, views, onClickHandler}) => {
+const VideoItem = ({item, duration, views, onClickHandler}) => {
+    const {
+            id: {videoId: id},
+            snippet: {title},
+            snippet: { thumbnails: { medium: {url}}},
+            snippet: {channelTitle: channel},
+            snippet: {publishedAt: date}
+    } = item;
     const viewsConverter = (viewsCount) => {
         // Nine Zeroes for Billions
         return Math.abs(Number(viewsCount)) >= 1.0e+9
@@ -47,7 +54,7 @@ const VideoItem = ({id, title, img, channel, date, duration, views, onClickHandl
         <VideoItemWrapper onClick={(e) => clickHandler(e, id)}>
             <div className="VideoItemWrapper_figure">
                 <figure>
-                    <img src={img} alt="alt"/>
+                    <img src={url} alt="alt"/>
                     <figcaption>
                         {durationConverter(duration)}
                     </figcaption>

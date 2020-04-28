@@ -29,11 +29,7 @@ const VideoItemList = ({ items, statistics, onClickHandler }) => {
     return (
         <div className="VideoItemWrapper_items" key={item.id.videoId || item.id.playlistId}>
           <VideoItem
-              id={item.id.videoId}
-              title={item.snippet.title}
-              img={item.snippet.thumbnails.medium.url}
-              channel={item.snippet.channelTitle}
-              date={item.snippet.publishedAt}
+              item={item}
               duration={getDuration(statistics, item.id.videoId)}
               views={getViewsCount(statistics, item.id.videoId)}
               onClickHandler={onClickHandler}
