@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 
 import './App.css';
@@ -12,6 +12,8 @@ import NextVideoItem from "../nextVideoItem/nextVideoItem";
 const App = () => {
 
     const [url, setUrl] = useState();
+    const [ended, setEnded] = useState(false);
+    const [currentVideoId, setCurrentVideoId] = useState();
     const [nextVideo, setNextVideo] = useState();
     const [result, setResult] = useState();
     const [statistics, setStatistic] = useState();
@@ -21,17 +23,34 @@ const App = () => {
         setReadyState('');
     };
 
-    const onClickHandler = (id) => {
-        setUrl(`https://www.youtube.com/watch?v=${id}`);
-        getNextVideo(id);
+    useEffect(() => {
+        if (currentVideoId) {
+            getNextVideo(currentVideoId);
+            setUrl(`https://www.youtube.com/watch?v=${currentVideoId}`);
+        }
+    }, [currentVideoId]);
+
+    useEffect(() => {
+        if (nextVideo){
+            startPlaying(nextVideo[0].id.videoId);
+        }
+    },[ended]);
+
+    function startPlaying(id){
+        setCurrentVideoId(id);
+        setEnded(false);
     };
 
-    const getVideos = (items) => {
+    function onClickHandler(id){
+        startPlaying(id);
+    };
+
+    function getVideos(items){
         const videoIds = items.map(item => item.id.videoId);
         return videoIds;
     };
 
-    const getVideoDuration = async (items) => {
+    async function getVideoDuration(items){
         const videos = getVideos(items);
         try {
             const response = await youtube.get('/videos', {
@@ -43,10 +62,11 @@ const App = () => {
             setStatistic(response.data.items);
         } catch (error) {
             alert(error);
-        };
+        }
+        ;
     };
 
-    const getData = async (term) => {
+    async function searchForTerms(term){
         try {
             const response = await youtube.get('/search', {
                 params: {
@@ -55,15 +75,19 @@ const App = () => {
                     q: term
                 }
             });
+            // console.log('search from terms results from api');
             setResult(response.data.items);
             // console.log(response.data.items);
+            // TO-DO: put this into an effect
             getVideoDuration(response.data.items);
         } catch (error) {
             alert(error);
-        };
+        }
+        ;
     };
 
-   const getNextVideo = async (currentVideo) => {
+   async function getNextVideo (currentVideo){
+       console.log('getNextVideo');
         try {
             const response = await youtube.get('/search', {
                 params: {
@@ -71,17 +95,23 @@ const App = () => {
                     relatedToVideoId: currentVideo
                 }
             });
-            console.log('data returnig form api');
-            console.log(response.data.items);
+
+            // console.log('get next video api result');
+            // console.log(response.data.items);
             setNextVideo(response.data.items);
             // getVideoDuration(response.data.items);
         } catch (error) {
             alert(error);
-        };
+        }
+        ;
+    };
+
+    function endedVideo(){
+      setEnded(true);
     };
 
     return <>
-        <Header submitHandler={getData}/>
+        <Header submitHandler={searchForTerms}/>
         <Body readyState={readyState}>
             <div className="Body_player">
                 <div className="Body_wrapper">
@@ -92,17 +122,18 @@ const App = () => {
                         onReady={removeMessage}
                         controls
                         playing
+                        onEnded={endedVideo}
                     />
                 </div>
             </div>
             <div className="Body_aside">
-                { nextVideo && nextVideo.lenght &&
-                    <>
-                        <div className="Aside_top">
-                            <NextVideoItem video={nextVideo} clickVideo={onClickHandler}/>
-                        </div>
-                        <hr/>
-                    </>
+                {nextVideo &&
+                <>
+                    <div className="Aside_top">
+                        <NextVideoItem video={nextVideo} clickVideo={onClickHandler}/>
+                    </div>
+                    <hr/>
+                </>
                 }
                 <div className="Aside_bottom">
                     <VideoItemList items={result} statistics={statistics} onClickHandler={onClickHandler}/>

@@ -27,7 +27,7 @@ const VideoItemList = ({ items, statistics, onClickHandler }) => {
 
   const renderedItems = items && items.map((item) =>  {
     return (
-        <div className="VideoItemWrapper_items" key={item.id.videoId}>
+        <div className="VideoItemWrapper_items" key={item.id.videoId || item.id.playlistId}>
           <VideoItem
               id={item.id.videoId}
               title={item.snippet.title}

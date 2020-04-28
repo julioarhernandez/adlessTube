@@ -5,7 +5,7 @@ import Search from '../../assets/images/search.svg';
 import User from '../../assets/images/user.svg';
 
 const Header = ({submitHandler}) => {
-    const [term, setTerm] = useState();
+    const [term, setTerm] = useState('');
     const changeHandler = (e) => {
         setTerm(e.target.value);
     };

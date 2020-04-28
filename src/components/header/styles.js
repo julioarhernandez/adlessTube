@@ -4,6 +4,10 @@ export const HeaderWrapper = styled.header`
     display: flex;
     padding: 10px;
     justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
     .Header_logo{
         display: flex;
         align-items: center;
