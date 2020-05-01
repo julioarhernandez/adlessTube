@@ -13,14 +13,6 @@ export const Body = styled.section`
         position: relative;
         padding: 20px 10px 20px 20px;
         position: relative;
-        ${props => props.readyState === 'notReady' && css`
-            &:after{
-                content: 'Enter video URL';
-                position: absolute;
-                top: 50%;
-                color: rgba(0, 0, 0, 0.6);
-            }
-        `}
     }
     .Body_wrapper{
         position: relative;

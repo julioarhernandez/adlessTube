@@ -11,7 +11,7 @@ const NextVideoItem = ({video, clickVideo}) => {
                     <strong>Next video</strong>
                 </div>
                 <div className="NextVideo_item">
-                    <Toggle label="Autoplay"/>
+                    <Toggle label="Autoplay" />
                 </div>
             </div>
             <div className="NextVideo_body">

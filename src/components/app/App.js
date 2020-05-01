@@ -1,27 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, createContext} from 'react';
 import ReactPlayer from 'react-player';
 
 import './App.css';
 import {Body} from "./styles";
 
-import youtube, {defaultParams, durationParams, relatedVideoParams} from "../../api/youtube";
+import {fetchVideoStatistics, fetchTermResults, fetchRelatedVideos} from "../../api/youtube";
 import Header from "../header/";
 import VideoItemList from "../videoItemList/videoItemList";
 import NextVideoItem from "../nextVideoItem/nextVideoItem";
+
+// Global autoplay context
+export const AutoPlayContext = createContext([{}, () => {}]);
 
 const App = () => {
 
     const [url, setUrl] = useState();
     const [ended, setEnded] = useState(false);
+    const [autoPlay, setAutoPlay] = useState(false);
     const [currentVideoId, setCurrentVideoId] = useState();
     const [nextVideo, setNextVideo] = useState();
     const [result, setResult] = useState();
     const [statistics, setStatistic] = useState();
-    const [readyState, setReadyState] = useState('notReady');
-
-    const removeMessage = () => {
-        setReadyState('');
-    };
 
     useEffect(() => {
         if (currentVideoId) {
@@ -31,10 +30,11 @@ const App = () => {
     }, [currentVideoId]);
 
     useEffect(() => {
-        if (nextVideo){
+        if (nextVideo && autoPlay){
             startPlaying(nextVideo[0].id.videoId);
         }
     },[ended]);
+
 
     function startPlaying(id){
         setCurrentVideoId(id);
@@ -52,74 +52,40 @@ const App = () => {
 
     async function getVideoDuration(items){
         const videos = getVideos(items);
-        try {
-            const response = await youtube.get('/videos', {
-                params: {
-                    ...durationParams,
-                    id: videos.toString()
-                }
-            });
-            setStatistic(response.data.items);
-        } catch (error) {
-            alert(error);
-        }
-        ;
+        (async () => {
+            const {items} = await fetchVideoStatistics(videos.toString());
+            setStatistic(items);
+        })();
     };
 
-    async function searchForTerms(term){
-        try {
-            const response = await youtube.get('/search', {
-                params: {
-                    ...defaultParams,
-                    type: 'video,playlist',
-                    q: term
-                }
-            });
-            // console.log('search from terms results from api');
-            setResult(response.data.items);
-            // console.log(response.data.items);
-            // TO-DO: put this into an effect
-            getVideoDuration(response.data.items);
-        } catch (error) {
-            alert(error);
-        }
-        ;
+    function searchForTerms(term){
+        (async () => {
+            const {items} = await fetchTermResults(term);
+            setResult(items);
+            getVideoDuration(items);
+        })();
     };
 
-   async function getNextVideo (currentVideo){
-       console.log('getNextVideo');
-        try {
-            const response = await youtube.get('/search', {
-                params: {
-                    ...relatedVideoParams,
-                    relatedToVideoId: currentVideo
-                }
-            });
-
-            // console.log('get next video api result');
-            // console.log(response.data.items);
-            setNextVideo(response.data.items);
-            // getVideoDuration(response.data.items);
-        } catch (error) {
-            alert(error);
-        }
-        ;
-    };
+    function getNextVideo (currentVideo){
+        (async () => {
+            const {items} = await fetchRelatedVideos(currentVideo);
+            setNextVideo(items);
+        })();
+    }
 
     function endedVideo(){
-      setEnded(true);
+        setEnded(true);
     };
 
     return <>
         <Header submitHandler={searchForTerms}/>
-        <Body readyState={readyState}>
+        <Body>
             <div className="Body_player">
                 <div className="Body_wrapper">
                     <ReactPlayer
                         url={url}
                         width='100%'
                         height='80vh'
-                        onReady={removeMessage}
                         controls
                         playing
                         onEnded={endedVideo}
@@ -130,7 +96,9 @@ const App = () => {
                 {nextVideo &&
                 <>
                     <div className="Aside_top">
-                        <NextVideoItem video={nextVideo} clickVideo={onClickHandler}/>
+                        <AutoPlayContext.Provider value={[autoPlay, setAutoPlay]}>
+                            <NextVideoItem video={nextVideo} clickVideo={onClickHandler}/>
+                        </AutoPlayContext.Provider>
                     </div>
                     <hr/>
                 </>
