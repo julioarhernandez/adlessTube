@@ -36,13 +36,20 @@ const App = () => {
     },[ended]);
 
 
-    function startPlaying(id){
-        setCurrentVideoId(id);
+    function startPlaying(id, type){
+        switch(type){
+            case 'video':
+                setCurrentVideoId(id);
+                break;
+            case 'playlist':
+                console.log('Playing a playlist');
+                break;
+        }
         setEnded(false);
     };
 
-    function onClickHandler(id){
-        startPlaying(id);
+    function onClickHandler(id, type= 'video'){
+        startPlaying(id, type);
     };
 
     function getVideos(items){

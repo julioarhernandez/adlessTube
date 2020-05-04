@@ -1,6 +1,7 @@
 import React from "react";
 import { VideoItemListWrapper } from "./styles";
 import VideoItem from "../videoItem/videoItem";
+import PlaylistItem from "../playlistItem/playlistItem";
 
 const VideoItemList = ({ items, statistics, onClickHandler }) => {
     const findVideoStatistics = (statisticArray, videoId) => {
@@ -26,14 +27,24 @@ const VideoItemList = ({ items, statistics, onClickHandler }) => {
     };
 
   const renderedItems = items && items.map((item) =>  {
-    return (
-        <div className="VideoItemWrapper_items" key={item.id.videoId || item.id.playlistId}>
-          <VideoItem
+      let itemType;
+      if (item.id.videoId){
+          itemType = <VideoItem
               item={item}
               duration={getDuration(statistics, item.id.videoId)}
               views={getViewsCount(statistics, item.id.videoId)}
               onClickHandler={onClickHandler}
           />
+      }
+      if (item.id.playlistId){
+          itemType = <PlaylistItem
+              item={item}
+              onClickHandler={onClickHandler}
+          />
+      }
+    return (
+        <div className="VideoItemWrapper_items" key={item.id.videoId || item.id.playlistId}>
+            {itemType}
         </div>
     )});
   return <VideoItemListWrapper>{renderedItems}</VideoItemListWrapper>;
