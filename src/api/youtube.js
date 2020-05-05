@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const defaultParams = {
     part: "snippet",
-    maxResults: 2,
+    maxResults: 6,
     key: process.env.REACT_APP_YT_KEY
 };
 

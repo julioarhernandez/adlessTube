@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import mediaQuery from "../../utils/breakpoints";
 
 export const HeaderWrapper = styled.header`
     display: flex;
@@ -15,8 +16,13 @@ export const HeaderWrapper = styled.header`
             height: 32px;
         }
     }
+    @media ${mediaQuery.smUp}{
+        .Header_terms{
+            min-width: 640px;}
+        }
+    }
+    
     .Header_terms{
-        min-width: 640px;
         form{
             display: flex;
             input{

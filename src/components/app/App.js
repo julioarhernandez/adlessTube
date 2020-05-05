@@ -1,5 +1,7 @@
 import React, {useEffect, useState, createContext} from 'react';
 import ReactPlayer from 'react-player';
+// import YouTube from 'react-youtube';
+
 
 import './App.css';
 import {Body} from "./styles";
@@ -18,23 +20,20 @@ const App = () => {
     const [ended, setEnded] = useState(false);
     const [autoPlay, setAutoPlay] = useState(false);
     const [currentVideoId, setCurrentVideoId] = useState();
-    const [playlistId, setPlaylistId] = useState();
+    const [playingPL, setPlayingPL] = useState(false);
     const [nextVideo, setNextVideo] = useState();
     const [result, setResult] = useState();
     const [statistics, setStatistic] = useState();
 
     useEffect(() => {
-        if (currentVideoId) {
+        if (playingPL){
+            setUrl(`https://www.youtube.com/playlist?list=${currentVideoId}`);
+        }else if (currentVideoId) {
             getNextVideo(currentVideoId);
+            setPlayingPL(false);
             setUrl(`https://www.youtube.com/watch?v=${currentVideoId}`);
         }
     }, [currentVideoId]);
-
-    useEffect(() => {
-        if (playlistId) {
-            setUrl(`https://www.youtube.com/watch?v=${playlistId[0].snippet.resourceId.videoId}&list=${playlistId[0].id}`);
-        }
-    }, [playlistId]);
 
     useEffect(() => {
         if (nextVideo && autoPlay){
@@ -44,15 +43,8 @@ const App = () => {
 
 
     function startPlaying(id, type= 'video'){
-        switch(type){
-            case 'video':
-                setCurrentVideoId(id);
-                break;
-            case 'playlist':
-                // get the first video of the playlist
-                getMainPlaylistVideo(id);
-                break;
-        }
+        setPlayingPL(type === 'playlist');
+        setCurrentVideoId(id);
         setEnded(false);
     };
 
@@ -63,13 +55,6 @@ const App = () => {
     function getVideos(items){
         const videoIds = items.map(item => item.id.videoId);
         return videoIds;
-    };
-
-    async function getMainPlaylistVideo(plId){
-        (async () => {
-            const {items} = await fetchPlaylistItems(plId);
-            setPlaylistId(items);
-        })();
     };
 
     async function getVideoDuration(items){
@@ -107,7 +92,7 @@ const App = () => {
                     <ReactPlayer
                         url={url}
                         width='100%'
-                        height='80vh'
+                        height='100%'
                         controls
                         playing
                         onEnded={endedVideo}
