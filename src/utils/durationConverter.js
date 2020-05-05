@@ -1,5 +1,5 @@
 const durationConverter = (time) => {
-    if (time === "PT0S"){
+    if (time === "PT0S" || time === "P0D"){
             return "LIVE";
         }
         if (time) {

@@ -2,7 +2,12 @@ import axios from 'axios';
 
 const defaultParams = {
     part: "snippet",
-    maxResults: 6,
+    maxResults: 2,
+    key: process.env.REACT_APP_YT_KEY
+};
+
+const playlistParams = {
+    part: "snippet",
     key: process.env.REACT_APP_YT_KEY
 };
 
@@ -29,6 +34,20 @@ export const fetchTermResults = async (term) => {
                 ...defaultParams,
                 type: 'video,playlist',
                 q: term
+            }
+        });
+        return response.data;
+    } catch (error) {
+        alert(error);
+    };
+};
+
+export const fetchPlaylistItems = async (id) => {
+     try {
+        const response = await youtube.get('/playlistItems', {
+            params: {
+                ...playlistParams,
+                playlistId: id
             }
         });
         return response.data;

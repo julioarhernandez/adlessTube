@@ -6,7 +6,7 @@ import playlist from "../../assets/images/playlist.svg";
 
 const PlaylistItem = ({item, onClickHandler}) => {
     const {
-            id: {videoId: id},
+            id: {playlistId: id},
             snippet: {title},
             snippet: { thumbnails: { medium: {url}}},
             snippet: {channelTitle: channel},
