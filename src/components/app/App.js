@@ -4,7 +4,7 @@ import ReactPlayer from 'react-player';
 import './App.css';
 import {Body} from "./styles";
 
-import {fetchVideoStatistics, fetchTermResults, fetchRelatedVideos} from "../../api/youtube";
+import {fetchVideoStatistics, fetchTermResults, fetchRelatedVideos, fetchPlaylistItems} from "../../api/youtube";
 import Header from "../header/";
 import VideoItemList from "../videoItemList/videoItemList";
 import NextVideoItem from "../nextVideoItem/nextVideoItem";
@@ -18,6 +18,7 @@ const App = () => {
     const [ended, setEnded] = useState(false);
     const [autoPlay, setAutoPlay] = useState(false);
     const [currentVideoId, setCurrentVideoId] = useState();
+    const [playlistId, setPlaylistId] = useState();
     const [nextVideo, setNextVideo] = useState();
     const [result, setResult] = useState();
     const [statistics, setStatistic] = useState();
@@ -30,31 +31,45 @@ const App = () => {
     }, [currentVideoId]);
 
     useEffect(() => {
+        if (playlistId) {
+            setUrl(`https://www.youtube.com/watch?v=${playlistId[0].snippet.resourceId.videoId}&list=${playlistId[0].id}`);
+        }
+    }, [playlistId]);
+
+    useEffect(() => {
         if (nextVideo && autoPlay){
             startPlaying(nextVideo[0].id.videoId);
         }
     },[ended]);
 
 
-    function startPlaying(id, type){
+    function startPlaying(id, type= 'video'){
         switch(type){
             case 'video':
                 setCurrentVideoId(id);
                 break;
             case 'playlist':
-                console.log('Playing a playlist');
+                // get the first video of the playlist
+                getMainPlaylistVideo(id);
                 break;
         }
         setEnded(false);
     };
 
-    function onClickHandler(id, type= 'video'){
+    function onClickHandler(id, type){
         startPlaying(id, type);
     };
 
     function getVideos(items){
         const videoIds = items.map(item => item.id.videoId);
         return videoIds;
+    };
+
+    async function getMainPlaylistVideo(plId){
+        (async () => {
+            const {items} = await fetchPlaylistItems(plId);
+            setPlaylistId(items);
+        })();
     };
 
     async function getVideoDuration(items){
