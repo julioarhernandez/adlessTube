@@ -1,15 +1,13 @@
 import React, {useEffect, useState, createContext} from 'react';
 import ReactPlayer from 'react-player';
-// import YouTube from 'react-youtube';
-
 
 import './App.css';
 import {Body} from "./styles";
 
-import {fetchVideoStatistics, fetchTermResults, fetchRelatedVideos, fetchPlaylistItems} from "../../api/youtube";
+import {fetchVideoStatistics, fetchTermResults, fetchRelatedVideos, fetchRelatedVideosPaginated} from "../../api/youtube";
 import Header from "../header/";
 import VideoItemList from "../videoItemList/videoItemList";
-import NextVideoItem from "../nextVideoItem/nextVideoItem";
+import NextVideoItemList from "../nextVideoItemList/nextVideoItemList";
 
 // Global autoplay context
 export const AutoPlayContext = createContext([{}, () => {}]);
@@ -17,38 +15,53 @@ export const AutoPlayContext = createContext([{}, () => {}]);
 const App = () => {
 
     const [url, setUrl] = useState();
-    const [ended, setEnded] = useState(false);
-    const [autoPlay, setAutoPlay] = useState(false);
+    const [baseVideoId, setBaseVideoId] = useState();
+    const [autoPlay, setAutoPlay] = useState(true);
+    const [playingNextListIndex, setPlayingNextListIndex] = useState();
     const [currentVideoId, setCurrentVideoId] = useState();
     const [playingPL, setPlayingPL] = useState(false);
-    const [nextVideo, setNextVideo] = useState();
-    const [result, setResult] = useState();
+    const [filterPlaylist, setFilterPlaylist] = useState(true);
+    const [nextVideo, setNextVideo] = useState({list: [], token: ''});
+    const [result, setResult] = useState({term: '', list: [], token: ''});
     const [statistics, setStatistic] = useState();
 
     useEffect(() => {
         if (playingPL){
             setUrl(`https://www.youtube.com/playlist?list=${currentVideoId}`);
         }else if (currentVideoId) {
-            getNextVideo(currentVideoId);
+            //If we are on the last item of nextVideoList or nextVideoList is empty we need to load more related videos to keep playing
+            if (isNextVideoReadyToLoad()){
+                getNextVideoPagination(baseVideoId, nextVideo.token);
+            }
             setPlayingPL(false);
             setUrl(`https://www.youtube.com/watch?v=${currentVideoId}`);
         }
     }, [currentVideoId]);
 
     useEffect(() => {
-        if (nextVideo && autoPlay){
-            startPlaying(nextVideo[0].id.videoId);
+        if (nextVideo.list.length > 0 && autoPlay){
+            startPlaying(nextVideo.list[playingNextListIndex].id.videoId);
         }
-    },[ended]);
+    },[playingNextListIndex]);
 
+    function isNextVideoReadyToLoad(){
+        const nextVideoList = nextVideo.list;
+        const nextVideoListLength = nextVideoList.length;
+        const isPlayingLastItemOfNextVideoList = (nextVideoListLength - 1) === playingNextListIndex;
+        return (!nextVideoListLength || isPlayingLastItemOfNextVideoList);
+    }
 
     function startPlaying(id, type= 'video'){
         setPlayingPL(type === 'playlist');
         setCurrentVideoId(id);
-        setEnded(false);
     };
 
     function onClickHandler(id, type){
+        setBaseVideoId(id);
+        startPlaying(id, type);
+    };
+
+     function onClickHandlerNextVideoList(id, type){
         startPlaying(id, type);
     };
 
@@ -67,25 +80,47 @@ const App = () => {
 
     function searchForTerms(term){
         (async () => {
-            const {items} = await fetchTermResults(term);
-            setResult(items);
-            getVideoDuration(items);
+            const response = await fetchTermResults(term, filterPlaylist);
+            if (response){
+                setResult({term: term, list: [...result.list, ...response.items], token: response.nextPageToken});
+                getVideoDuration(response.items);
+            }
         })();
     };
 
-    function getNextVideo (currentVideo){
+     function searchForTermsLoadMore(token){
         (async () => {
-            const {items} = await fetchRelatedVideos(currentVideo);
-            setNextVideo(items);
+            const response = await fetchTermResults(result.term, token);
+            if (response){
+                setResult({term: result.term, list: [...result.list, ...response.items], token: response.nextPageToken});
+                getVideoDuration(response.items);
+            }
         })();
-    }
+    };
+
+    function getNextVideoPagination (videoId, token){
+       (async () => {
+            const {items,nextPageToken} = await fetchRelatedVideosPaginated(videoId, token);
+            setNextVideo({list: [...nextVideo.list, ...items], token: nextPageToken});
+            // getVideoDuration(items);
+        })();
+    };
+
+    function loadMore (token) {
+        return getNextVideoPagination(baseVideoId, token);
+    };
 
     function endedVideo(){
-        setEnded(true);
+        const isAutoplay = () => autoPlay;
+        if (isAutoplay()){
+        setPlayingNextListIndex((playingNextListIndex) => {
+            return (typeof playingNextListIndex !== 'undefined' ? playingNextListIndex + 1: 0)
+        });
+        }
     };
 
     return <>
-        <Header submitHandler={searchForTerms}/>
+        <Header submitHandler={searchForTerms} filterPlaylist={filterPlaylist} setFilterPlaylist={setFilterPlaylist}/>
         <Body>
             <div className="Body_player">
                 <div className="Body_wrapper">
@@ -100,18 +135,18 @@ const App = () => {
                 </div>
             </div>
             <div className="Body_aside">
-                {nextVideo &&
+                {nextVideo.list && nextVideo.list.length > 0 &&
                 <>
                     <div className="Aside_top">
                         <AutoPlayContext.Provider value={[autoPlay, setAutoPlay]}>
-                            <NextVideoItem video={nextVideo} clickVideo={onClickHandler}/>
+                            <NextVideoItemList nextVideos={nextVideo.list} clickVideo={onClickHandlerNextVideoList} loadMore={loadMore} token={nextVideo.token} selectedIndex={playingNextListIndex}/>
                         </AutoPlayContext.Provider>
                     </div>
                     <hr/>
                 </>
                 }
                 <div className="Aside_bottom">
-                    <VideoItemList items={result} statistics={statistics} onClickHandler={onClickHandler}/>
+                    <VideoItemList items={result.list} statistics={statistics} onClickHandler={onClickHandler} loadMore={searchForTermsLoadMore} token={result.token}/>
                 </div>
             </div>
         </Body>

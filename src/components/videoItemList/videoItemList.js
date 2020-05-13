@@ -2,8 +2,9 @@ import React from "react";
 import { VideoItemListWrapper } from "./styles";
 import VideoItem from "../videoItem/videoItem";
 import PlaylistItem from "../playlistItem/playlistItem";
+import Button from "../commons/Button";
 
-const VideoItemList = ({ items, statistics, onClickHandler }) => {
+const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token}) => {
     const findVideoStatistics = (statisticArray, videoId) => {
         return statisticArray.find(elm => elm.id === videoId);
     };
@@ -26,7 +27,7 @@ const VideoItemList = ({ items, statistics, onClickHandler }) => {
           }
     };
 
-  const renderedItems = items && items.map((item) =>  {
+  const renderedItems = items.length > 0 && items.map((item) =>  {
       let itemType;
       if (item.id.videoId){
           itemType = <VideoItem
@@ -47,7 +48,16 @@ const VideoItemList = ({ items, statistics, onClickHandler }) => {
             {itemType}
         </div>
     )});
-  return <VideoItemListWrapper>{renderedItems}</VideoItemListWrapper>;
+  return <VideoItemListWrapper>
+          <div className="VideoItemWrapper_body">
+            {renderedItems}
+          </div>
+            {items.length > 0 &&
+                <div className="VideoItemWrapper_footer">
+                    <Button clickHandler={() => loadMore(token)} text="Load More" />
+                </div>
+            }
+      </VideoItemListWrapper>;
 };
 
 export default VideoItemList;

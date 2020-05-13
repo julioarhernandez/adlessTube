@@ -21,7 +21,15 @@ export const HeaderWrapper = styled.header`
             min-width: 640px;}
         }
     }
-    
+    .Header_center{
+        display: inline-flex;
+    }
+    .Header_filters{
+        display: inline-flex;
+        label{
+            margin: 0 0.3rem;
+        }
+    }
     .Header_terms{
         form{
             display: flex;

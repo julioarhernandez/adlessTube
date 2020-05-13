@@ -11,9 +11,25 @@ export const ToggleWrapper = styled.label`
         .ToggleGroup{
              position: relative;
              display: inline-block;
-             width: 36px;
-             height: 14px;
-            
+             &:not(.image){
+                 width: 36px;
+                 height: 14px;
+             }
+             &.image{
+                display: inline-flex;
+                img{
+                    width: 30px;
+                    filter: opacity(0.4);
+                    transition: transform 0.4s;
+                    transform: scale(0.9);
+                    cursor: pointer;
+                }
+                input:checked + img{
+                    filter: opacity(1);
+                    transform: scale(1);
+                    transition: transform 0.4s;
+                }
+             }
              input { 
               opacity: 0;
               width: 0;
