@@ -61,8 +61,8 @@ const App = () => {
         startPlaying(id, type);
     };
 
-     function onClickHandlerNextVideoList(id, type){
-        startPlaying(id, type);
+     function onClickHandlerNextVideoList(index){
+        setPlayingNextListIndex(index);
     };
 
     function getVideos(items){

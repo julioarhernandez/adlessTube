@@ -5,7 +5,7 @@ import viewsConverter from "../../utils/viewsConverter";
 import durationConverter from "../../utils/durationConverter";
 import cleanQuotes from "../../utils/cleanQuotes";
 
-const VideoItem = ({item, duration, views, onClickHandler}) => {
+const VideoItem = ({item, duration, views, onClickHandler, index}) => {
     const {
             id: {videoId: id},
             snippet: {title},
@@ -19,7 +19,8 @@ const VideoItem = ({item, duration, views, onClickHandler}) => {
     }
     const clickHandler = (e, id) => {
         e.preventDefault();
-        onClickHandler(id);
+        const clickId = (typeof index !== "undefined" ? index : id);
+        onClickHandler(clickId);
     };
     return (
         <VideoItemWrapper onClick={(e) => clickHandler(e, id)}>

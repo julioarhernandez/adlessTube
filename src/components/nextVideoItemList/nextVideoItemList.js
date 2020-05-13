@@ -7,12 +7,12 @@ import NextVideoItem from "../nextVideoItem/nextVideoItem";
 import Toggle from "../commons/Toggle";
 import Button from "../commons/Button";
 
-const NextVideoItemList = ({nextVideos, onClickHandler, loadMore, token, selectedIndex}) => {
+const NextVideoItemList = ({nextVideos, clickVideo, loadMore, token, selectedIndex}) => {
     const [autoPlay, setAutoplay] = useContext(AutoPlayContext);
     const nextVideoItems = nextVideos && nextVideos.map((el, index) => {
         return (
             <div className={classNames('NexVideoItemList_item', {selected: index === selectedIndex})} key={`nextVideoItemList_item-${index}`}>
-                <NextVideoItem video={el} clickVideo={onClickHandler} />
+                <NextVideoItem video={el} clickVideo={clickVideo} index={index}/>
             </div>
         );
     });
