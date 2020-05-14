@@ -87,22 +87,29 @@ const App = () => {
     async function getVideoDuration(items){
         const videos = getVideos(items);
         (async () => {
-            const {items} = await fetchVideoStatistics(videos.toString());
-            setStatistic(items);
+            const response = await fetchVideoStatistics(videos.toString());
+            if (response.data){
+                setStatistic(response.data.items);
+            }else{
+                console.log(response.error);
+            }
         })();
     };
 
     function searchForTerms(term){
         (async () => {
             const response = await fetchTermResults(term, filterPlaylist, '');
-            if (response){
-                setResult({term: term, list: [...response.items], token: response.nextPageToken});
-                getVideoDuration(response.items);
+            if (response.data){
+                setResult({term: term, list: [...response.data.items], token: response.data.nextPageToken});
+                getVideoDuration(response.data.items);
+            }else{
+                console.log(response.error);
             }
         })();
     };
 
      function searchForTermsLoadMore(token){
+         console.log('start loading more terms');
         setLoadMoreResultsSpinner(true);
         (async () => {
             const response = await fetchTermResults(result.term, filterPlaylist, token);
@@ -110,9 +117,10 @@ const App = () => {
                 // Give a little time to shutdown spinner
                 setTimeout(()=>{
                     setLoadMoreResultsSpinner(false);
-                }, 500);
-                setResult({term: result.term, list: [...result.list, ...response.items], token: response.nextPageToken});
-                getVideoDuration(response.items);
+                    console.log('end loading more terms');
+                }, 5000);
+                setResult({term: result.term, list: [...result.list, ...response.data.items], token: response.data.nextPageToken});
+                getVideoDuration(response.data.items);
             }else{
                 console.log(response.error);
                 setLoadMoreResultsSpinner(false);
@@ -124,7 +132,7 @@ const App = () => {
        (async () => {
             const response = await fetchRelatedVideos(videoId);
             if (response.data){
-                setNextVideo({list: [...response.items], token: response.nextPageToken});
+                setNextVideo({list: [...response.data.items], token: response.data.nextPageToken});
             }else{
                 console.log(response.error);
             }
@@ -134,6 +142,7 @@ const App = () => {
 
     function getNextVideoPagination (videoId, token){
         setLoadMoreNextVideosSpinner(true);
+        console.log('start loading morevideos');
        (async () => {
             const response = await fetchRelatedVideosPaginated(videoId, token);
             if (response.data){
@@ -142,7 +151,7 @@ const App = () => {
                     setLoadMoreNextVideosSpinner(false);
                     console.log('end loading morevideos');
                 }, 500);
-                setNextVideo({list: [...nextVideo.list, ...response.items], token: response.nextPageToken});
+                setNextVideo({list: [...nextVideo.list, ...response.data.items], token: response.data.nextPageToken});
             }else{
                 console.log(response.error);
                 setLoadMoreNextVideosSpinner(false);

@@ -4,7 +4,7 @@ import VideoItem from "../videoItem/videoItem";
 import PlaylistItem from "../playlistItem/playlistItem";
 import Button from "../commons/Button";
 
-const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token}) => {
+const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token, loading}) => {
     const findVideoStatistics = (statisticArray, videoId) => {
         return statisticArray.find(elm => elm.id === videoId);
     };
@@ -54,7 +54,7 @@ const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token}) =>
           </div>
             {items.length > 0 &&
                 <div className="VideoItemWrapper_footer">
-                    <Button clickHandler={() => loadMore(token)} text="Load More" />
+                    <Button clickHandler={() => loadMore(token)} text="Load More" loading={loading}/>
                 </div>
             }
       </VideoItemListWrapper>;

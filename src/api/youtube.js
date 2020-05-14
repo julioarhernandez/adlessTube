@@ -32,9 +32,9 @@ export const fetchTermResults = async (term, filterPlaylist, token) => {
                 q: term
             }
         });
-        return response.data;
+        return response;
     } catch (error) {
-        alert(error);
+        return {error};
     };
 }
 
@@ -75,9 +75,9 @@ export const fetchVideoStatistics = async (videosId) => {
                     id: videosId
                 }
             });
-        return response.data;
+        return response;
     } catch (error) {
-        alert(error);
+        return {error};
     };
 };
 
