@@ -80,9 +80,9 @@ const App = () => {
 
     function searchForTerms(term){
         (async () => {
-            const response = await fetchTermResults(term, filterPlaylist);
+            const response = await fetchTermResults(term, filterPlaylist, '');
             if (response){
-                setResult({term: term, list: [...result.list, ...response.items], token: response.nextPageToken});
+                setResult({term: term, list: [...response.items], token: response.nextPageToken});
                 getVideoDuration(response.items);
             }
         })();
@@ -90,7 +90,7 @@ const App = () => {
 
      function searchForTermsLoadMore(token){
         (async () => {
-            const response = await fetchTermResults(result.term, token);
+            const response = await fetchTermResults(result.term, filterPlaylist, token);
             if (response){
                 setResult({term: result.term, list: [...result.list, ...response.items], token: response.nextPageToken});
                 getVideoDuration(response.items);

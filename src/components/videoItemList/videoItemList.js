@@ -27,7 +27,7 @@ const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token}) =>
           }
     };
 
-  const renderedItems = items.length > 0 && items.map((item) =>  {
+  const renderedItems = items.length > 0 && items.map((item, index) =>  {
       let itemType;
       if (item.id.videoId){
           itemType = <VideoItem
@@ -44,7 +44,7 @@ const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token}) =>
           />
       }
     return (
-        <div className="VideoItemWrapper_items" key={item.id.videoId || item.id.playlistId}>
+        <div className="VideoItemWrapper_items" key={`${item.id.videoId || item.id.playlistId}-${index}`}>
             {itemType}
         </div>
     )});
