@@ -29,7 +29,9 @@ const App = () => {
         if (playingPL){
             setUrl(`https://www.youtube.com/playlist?list=${currentVideoId}`);
         }else if (currentVideoId) {
-            //If we are on the last item of nextVideoList or nextVideoList is empty we need to load more related videos to keep playing
+            // If we are on the last item of nextVideoList or
+            // nextVideoList is empty we need to load more related videos to keep playing
+            // Or the baseVideoId changed
             if (isNextVideoReadyToLoad()){
                 getNextVideoPagination(baseVideoId, nextVideo.token);
             }
@@ -39,10 +41,20 @@ const App = () => {
     }, [currentVideoId]);
 
     useEffect(() => {
-        if (nextVideo.list.length > 0 && autoPlay){
+        if (nextVideo.list.length > 0 && autoPlay && (typeof playingNextListIndex !== undefined)){
+            console.log('useEffect playingNextListIndex',typeof playingNextListIndex);
             startPlaying(nextVideo.list[playingNextListIndex].id.videoId);
         }
     },[playingNextListIndex]);
+
+    useEffect(() => {
+        if (baseVideoId){
+            getNextVideos(baseVideoId);
+            setPlayingNextListIndex(undefined);
+        }
+    }, [baseVideoId]);
+
+
 
     function isNextVideoReadyToLoad(){
         const nextVideoList = nextVideo.list;
@@ -57,8 +69,8 @@ const App = () => {
     };
 
     function onClickHandler(id, type){
-        setBaseVideoId(id);
         startPlaying(id, type);
+        setBaseVideoId(id);
     };
 
      function onClickHandlerNextVideoList(index){
@@ -98,10 +110,22 @@ const App = () => {
         })();
     };
 
+     function getNextVideos (videoId){
+       (async () => {
+            const response = await fetchRelatedVideos(videoId);
+            if (response){
+                setNextVideo({list: [...response.items], token: response.nextPageToken});
+            }
+            // getVideoDuration(items);
+        })();
+    };
+
     function getNextVideoPagination (videoId, token){
        (async () => {
-            const {items,nextPageToken} = await fetchRelatedVideosPaginated(videoId, token);
-            setNextVideo({list: [...nextVideo.list, ...items], token: nextPageToken});
+            const response = await fetchRelatedVideosPaginated(videoId, token);
+            if (response){
+                setNextVideo({list: [...nextVideo.list, ...response.items], token: response.nextPageToken});
+            }
             // getVideoDuration(items);
         })();
     };
