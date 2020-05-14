@@ -46,9 +46,9 @@ export const fetchRelatedVideos = async (id) => {
                 relatedToVideoId: id
             }
         });
-        return response.data;
+        return response;
     } catch (error) {
-        alert(error);
+        return {error};
     };
 };
 
@@ -61,9 +61,9 @@ export const fetchRelatedVideosPaginated = async (id, token) => {
                 pageToken: token
             }
         });
-        return response.data;
+        return response;
     } catch (error) {
-        alert(error);
+        return {error};
     };
 };
 

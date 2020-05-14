@@ -7,7 +7,7 @@ import NextVideoItem from "../nextVideoItem/nextVideoItem";
 import Toggle from "../commons/Toggle";
 import Button from "../commons/Button";
 
-const NextVideoItemList = ({nextVideos, clickVideo, loadMore, token, selectedIndex}) => {
+const NextVideoItemList = ({nextVideos, clickVideo, loadMore, token, selectedIndex, loading}) => {
     const [autoPlay, setAutoplay] = useContext(AutoPlayContext);
     const nextVideoItems = nextVideos && nextVideos.map((el, index) => {
         return (
@@ -27,7 +27,7 @@ const NextVideoItemList = ({nextVideos, clickVideo, loadMore, token, selectedInd
                 </div>
             </div>
             <div className="NextVideoList_body">{nextVideoItems}</div>
-            <div className="NextVideoList_footer"><Button clickHandler={() => loadMore(token)} text="Load More" /></div>
+            <div className="NextVideoList_footer"><Button clickHandler={() => loadMore(token)} text="Load More" loading={loading}/></div>
         </NextVideoItemListWrapper>
     );
 };
