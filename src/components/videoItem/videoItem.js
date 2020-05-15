@@ -4,6 +4,7 @@ import theDate from "../../utils/date";
 import viewsConverter from "../../utils/viewsConverter";
 import durationConverter from "../../utils/durationConverter";
 import cleanQuotes from "../../utils/cleanQuotes";
+import menuIcon from '../../assets/images/dots.svg';
 
 const VideoItem = ({item, duration, views, onClickHandler, index}) => {
     const {
@@ -23,8 +24,8 @@ const VideoItem = ({item, duration, views, onClickHandler, index}) => {
         onClickHandler(clickId);
     };
     return (
-        <VideoItemWrapper onClick={(e) => clickHandler(e, id)}>
-            <div className="VideoItemWrapper_figure">
+        <VideoItemWrapper>
+            <div className="VideoItemWrapper_figure" onClick={(e) => clickHandler(e, id)}>
                 <figure>
                     <img src={url} alt="alt"/>
                     <figcaption>
@@ -33,7 +34,7 @@ const VideoItem = ({item, duration, views, onClickHandler, index}) => {
                 </figure>
             </div>
             <div className="VideoItemWrapper_body">
-                <div className="VideoItemWrapper_details">
+                <div className="VideoItemWrapper_details" onClick={(e) => clickHandler(e, id)}>
                     <div className="VideoItemWrapper_title">
                         {cleanQuotes(title)}
                     </div>
@@ -50,6 +51,9 @@ const VideoItem = ({item, duration, views, onClickHandler, index}) => {
                             <span className="text-medium">{convertDate(date)} ago</span>
                         </div>
                     </div>
+                </div>
+                <div className="VideoItemWrapper_menu">
+                    <img src={menuIcon} alt="Action menu" />
                 </div>
 
             </div>

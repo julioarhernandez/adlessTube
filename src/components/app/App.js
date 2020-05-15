@@ -1,10 +1,12 @@
 import React, {useEffect, useState, createContext} from 'react';
 import ReactPlayer from 'react-player';
+import { ToastContainer } from 'react-toastify';
 
 import './App.css';
 import {Body} from "./styles";
 
 import {fetchVideoStatistics, fetchTermResults, fetchRelatedVideos, fetchRelatedVideosPaginated} from "../../api/youtube";
+import Notify from "../Notify/Notify";
 import Header from "../header/";
 import VideoItemList from "../videoItemList/videoItemList";
 import NextVideoItemList from "../nextVideoItemList/nextVideoItemList";
@@ -13,7 +15,6 @@ import NextVideoItemList from "../nextVideoItemList/nextVideoItemList";
 export const AutoPlayContext = createContext([{}, () => {}]);
 
 const App = () => {
-
     const [url, setUrl] = useState();
     const [baseVideoId, setBaseVideoId] = useState();
     const [loadMoreResultsSpinner, setLoadMoreResultsSpinner] = useState(false);
@@ -56,7 +57,10 @@ const App = () => {
         }
     }, [baseVideoId]);
 
-
+    useEffect(() => {
+        const message = filterPlaylist ? 'Playlist included in search results' : 'Playlist are not included in search results';
+        Notify(message, 'info');
+    }, [filterPlaylist]);
 
     function isNextVideoReadyToLoad(){
         const nextVideoList = nextVideo.list;
@@ -217,6 +221,18 @@ const App = () => {
                 </div>
             </div>
         </Body>
+       <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            limit={3}
+        />
     </>;
 }
 
