@@ -13,6 +13,7 @@ import NextVideoItemList from "../nextVideoItemList/nextVideoItemList";
 
 // Global autoplay context
 export const AutoPlayContext = createContext([{}, () => {}]);
+export const MenuContext = createContext([() => {}, () => {}]);
 
 const App = () => {
     const [url, setUrl] = useState();
@@ -79,7 +80,7 @@ const App = () => {
         setBaseVideoId(id);
     };
 
-     function onClickHandlerNextVideoList(index){
+    function onClickHandlerNextVideoList(index){
         setPlayingNextListIndex(index);
     };
 
@@ -88,7 +89,7 @@ const App = () => {
         return videoIds;
     };
 
-    async function getVideoDuration(items){
+    function getVideoDuration(items){
         const videos = getVideos(items);
         (async () => {
             const response = await fetchVideoStatistics(videos.toString());
@@ -112,7 +113,7 @@ const App = () => {
         })();
     };
 
-     function searchForTermsLoadMore(token){
+    function searchForTermsLoadMore(token){
          console.log('start loading more terms');
         setLoadMoreResultsSpinner(true);
         (async () => {
@@ -132,7 +133,7 @@ const App = () => {
         })();
     };
 
-     function getNextVideos (videoId){
+    function getNextVideos (videoId){
        (async () => {
             const response = await fetchRelatedVideos(videoId);
             if (response.data){
@@ -164,6 +165,14 @@ const App = () => {
         })();
     };
 
+    function addFavorite (id) {
+        console.log('add to favorite', id);
+    };
+
+    function removeVideo (id) {
+        console.log('removeVideo', id);
+    };
+
     function loadMore (token) {
         return getNextVideoPagination(baseVideoId, token);
     };
@@ -192,6 +201,7 @@ const App = () => {
                     />
                 </div>
             </div>
+            <MenuContext.Provider value={[addFavorite, removeVideo]}>
             <div className="Body_aside">
                 {nextVideo.list && nextVideo.list.length > 0 &&
                 <>
@@ -220,8 +230,9 @@ const App = () => {
                         loading={loadMoreResultsSpinner}/>
                 </div>
             </div>
+            </MenuContext.Provider>
         </Body>
-       <ToastContainer
+        <ToastContainer
             position="bottom-center"
             autoClose={5000}
             hideProgressBar={false}

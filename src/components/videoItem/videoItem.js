@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {VideoItemWrapper} from "./styles";
 import theDate from "../../utils/date";
 import viewsConverter from "../../utils/viewsConverter";
@@ -9,8 +9,10 @@ import closeIcon from '../../assets/images/close.svg';
 import starIcon from '../../assets/images/star.svg';
 import DropdownMenu from "../dropdownMenu/dropdownMenu";
 import LinkList from "../linkList/LinkList";
+import {MenuContext} from "../app/App";
 
-const VideoItem = ({item, duration, views, onClickHandler, index}) => {
+const VideoItem = ({type, item, duration, views, onClickHandler, index}) => {
+    const [addFavorite, removeVideo] = useContext(MenuContext);
     const {
             id: {videoId: id},
             snippet: {title},
@@ -31,14 +33,16 @@ const VideoItem = ({item, duration, views, onClickHandler, index}) => {
         {
             icon: starIcon,
             text: 'Favorite',
-            handler: (id) => { console.log('favorite', id)}
-        },
-        {
-            icon: closeIcon,
-            text: 'Remove',
-            handler: (id) => { console.log('remove', id)}
+            handler: (id) => {addFavorite(id)}
         }
     ];
+    if (type === 'nextVideo'){
+        listItems.push({
+            icon: closeIcon,
+            text: 'Remove',
+            handler: (id) => {removeVideo(id)}
+        })
+    };
     return (
         <VideoItemWrapper>
             <div className="VideoItemWrapper_figure" onClick={(e) => clickHandler(e, id)}>
