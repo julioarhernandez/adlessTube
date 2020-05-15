@@ -5,6 +5,10 @@ import viewsConverter from "../../utils/viewsConverter";
 import durationConverter from "../../utils/durationConverter";
 import cleanQuotes from "../../utils/cleanQuotes";
 import menuIcon from '../../assets/images/dots.svg';
+import closeIcon from '../../assets/images/close.svg';
+import starIcon from '../../assets/images/star.svg';
+import DropdownMenu from "../dropdownMenu/dropdownMenu";
+import LinkList from "../linkList/LinkList";
 
 const VideoItem = ({item, duration, views, onClickHandler, index}) => {
     const {
@@ -23,6 +27,18 @@ const VideoItem = ({item, duration, views, onClickHandler, index}) => {
         const clickId = (typeof index !== "undefined" ? index : id);
         onClickHandler(clickId);
     };
+    const listItems = [
+        {
+            icon: starIcon,
+            text: 'Favorite',
+            handler: (id) => { console.log('favorite', id)}
+        },
+        {
+            icon: closeIcon,
+            text: 'Remove',
+            handler: (id) => { console.log('remove', id)}
+        }
+    ];
     return (
         <VideoItemWrapper>
             <div className="VideoItemWrapper_figure" onClick={(e) => clickHandler(e, id)}>
@@ -53,7 +69,9 @@ const VideoItem = ({item, duration, views, onClickHandler, index}) => {
                     </div>
                 </div>
                 <div className="VideoItemWrapper_menu">
-                    <img src={menuIcon} alt="Action menu" />
+                    <DropdownMenu imgSrc={menuIcon}>
+                        <LinkList list={listItems} id={id}/>
+                    </DropdownMenu>
                 </div>
 
             </div>

@@ -56,9 +56,5 @@ export const VideoItemWrapper = styled.div`
         width: 20px;
         padding: 0 5px 5px;
         cursor: pointer;
-        filter: contrast(0);
-        &:hover{
-            filter: contrast(1);
-        }
     }
 `;
