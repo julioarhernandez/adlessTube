@@ -165,12 +165,20 @@ const App = () => {
         })();
     };
 
+    function removeVideoIdFromNextList(id) {
+        const nextVideoList = nextVideo.list;
+        const filteredNextVideoList = nextVideoList.filter((el)=> el.id.videoId !== id);
+        setNextVideo((vl) => {
+            return ({list: filteredNextVideoList, token: vl.token });
+        });
+    };
+
     function addFavorite (id) {
         console.log('add to favorite', id);
     };
 
     function removeVideo (id) {
-        console.log('removeVideo', id);
+        removeVideoIdFromNextList(id);
     };
 
     function loadMore (token) {
