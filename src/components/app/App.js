@@ -118,7 +118,7 @@ const App = () => {
                 setTimeout(()=>{
                     setLoadMoreResultsSpinner(false);
                     console.log('end loading more terms');
-                }, 5000);
+                }, 500);
                 setResult({term: result.term, list: [...result.list, ...response.data.items], token: response.data.nextPageToken});
                 getVideoDuration(response.data.items);
             }else{
