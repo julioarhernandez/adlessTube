@@ -4,11 +4,9 @@ import theDate from "../../utils/date";
 import viewsConverter from "../../utils/viewsConverter";
 import durationConverter from "../../utils/durationConverter";
 import cleanQuotes from "../../utils/cleanQuotes";
-import menuIcon from '../../assets/images/dots.svg';
 import closeIcon from '../../assets/images/close.svg';
 import starIcon from '../../assets/images/star.svg';
 import DropdownMenu from "../dropdownMenu/dropdownMenu";
-import LinkList from "../linkList/LinkList";
 import {MenuContext} from "../app/App";
 
 const VideoItem = ({type, item, duration, views, onClickHandler, index}) => {
@@ -73,9 +71,7 @@ const VideoItem = ({type, item, duration, views, onClickHandler, index}) => {
                     </div>
                 </div>
                 <div className="VideoItemWrapper_menu">
-                    <DropdownMenu imgSrc={menuIcon}>
-                        <LinkList list={listItems} id={id}/>
-                    </DropdownMenu>
+                    <DropdownMenu list={listItems} id={id}/>
                 </div>
 
             </div>

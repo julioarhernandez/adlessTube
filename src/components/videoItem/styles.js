@@ -53,7 +53,7 @@ export const VideoItemWrapper = styled.div`
         position: absolute;
         top: 0;
         right: 0;
-        width: 20px;
+        width: 25px;
         padding: 0 5px 5px;
         cursor: pointer;
     }
