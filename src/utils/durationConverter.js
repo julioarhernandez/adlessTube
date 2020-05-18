@@ -2,7 +2,7 @@ const durationConverter = (time) => {
     const addCeros = (items) => {
         if (items.length > 1){
            const ceroPadded = items.map((v,i) => {
-               return (i === 0  ? v : v.padStart(2,'0'));
+               return (i === 0  ? v : String(v).padStart(2,'0'));
            });
            return ceroPadded;
         }else{

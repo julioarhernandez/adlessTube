@@ -14,9 +14,9 @@ const DropdownMenu = ({list, id}) => {
         setAnchorEl(null);
     };
 
-    const menuItems = list.map((item) => {
+    const menuItems = list.map((item, i) => {
         const {icon, text, handler} = item;
-        return  <MenuItem onClick={() => {setAnchorEl(null); handler(id)}}>
+        return  <MenuItem onClick={() => {setAnchorEl(null); handler(id)}} key={`MenuItem-${i}`}>
                     <DropdownMenuWrapper>
                         {item.icon &&
                             <div className="DropdownMenuWrapper_icon">
