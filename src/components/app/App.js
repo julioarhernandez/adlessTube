@@ -45,8 +45,7 @@ const App = () => {
     }, [currentVideoId]);
 
     useEffect(() => {
-        if (nextVideo.list.length > 0 && autoPlay && (typeof playingNextListIndex !== undefined)){
-            console.log('useEffect playingNextListIndex',typeof playingNextListIndex);
+        if (nextVideo.list.length > 0 && autoPlay && (typeof playingNextListIndex !== 'undefined')){
             startPlaying(nextVideo.list[playingNextListIndex].id.videoId);
         }
     },[playingNextListIndex]);
