@@ -171,7 +171,14 @@ const App = () => {
 
     function removeVideoIdFromNextList(id) {
         const nextVideoList = nextVideo.list;
-        const filteredNextVideoList = nextVideoList.filter((el)=> el.id.videoId !== id);
+        const filteredNextVideoList = nextVideoList.filter((el)=> {
+           if (typeof el.id.videoId !== 'undefined'){
+               return el.id.videoId !== id
+           }
+           if (typeof el.id.playlistId !== 'undefined'){
+               return el.id.playlistId !== id
+           }
+        });
         setNextVideo((vl) => {
             return ({list: filteredNextVideoList, token: vl.token });
         });

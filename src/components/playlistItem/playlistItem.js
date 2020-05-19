@@ -37,7 +37,7 @@ const PlaylistItem = ({item, onClickHandler, type}) => {
         listItems.push({
             icon: addIcon,
             text: 'Add to list',
-            handler: (id) => {addToList(id)}
+            handler: (id) => {addToList(item)}
         })
     };
     if (type === 'nextVideo'){
@@ -72,7 +72,7 @@ const PlaylistItem = ({item, onClickHandler, type}) => {
                     </div>
                 </div>
                  <div className="PlaylistWrapper_menu">
-                    <DropdownMenu list={listItems} id={item}/>
+                    <DropdownMenu list={listItems} id={item.id.playlistId}/>
                 </div>
             </div>
 
