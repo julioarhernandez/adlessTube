@@ -240,6 +240,7 @@ const App = () => {
                                 token={nextVideo.token}
                                 selectedIndex={playingNextListIndex}
                                 loading={loadMoreNextVideosSpinner}
+                                baseVideo={baseVideoId}
                             />
                         </AutoPlayContext.Provider>
                     </div>
