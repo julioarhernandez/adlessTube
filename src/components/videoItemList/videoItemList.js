@@ -35,6 +35,7 @@ const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token, loa
               duration={getDuration(statistics, item.id.videoId)}
               views={getViewsCount(statistics, item.id.videoId)}
               onClickHandler={onClickHandler}
+              type="results"
           />
       }
       if (item.id.playlistId){

@@ -18,7 +18,7 @@ export const HeaderWrapper = styled.header`
     }
     @media ${mediaQuery.smUp}{
         .Header_terms{
-            min-width: 640px;}
+            min-width: 560px;}
         }
     }
     .Header_center{

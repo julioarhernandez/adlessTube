@@ -13,7 +13,7 @@ import NextVideoItemList from "../nextVideoItemList/nextVideoItemList";
 
 // Global autoplay context
 export const AutoPlayContext = createContext([{}, () => {}]);
-export const MenuContext = createContext([() => {}, () => {}]);
+export const MenuContext = createContext([() => {}, () => {}, () => {}]);
 
 const App = () => {
     const [url, setUrl] = useState();
@@ -136,7 +136,9 @@ const App = () => {
        (async () => {
             const response = await fetchRelatedVideos(videoId);
             if (response.data){
-                setNextVideo({list: [...response.data.items], token: response.data.nextPageToken});
+                setNextVideo((vl) => {
+                    return ({list: [...vl.list, ...response.data.items], token: response.data.nextPageToken})
+                });
             }else{
                 console.log(response.error);
             }
@@ -172,8 +174,21 @@ const App = () => {
         });
     };
 
+    function addVideoToNextList(id) {
+        // const filteredNextVideoList = nextVideoList.filter((el)=> el.id.videoId !== id);
+        setNextVideo((vl) => {
+            return ({list: [...vl.list, id], token: vl.token });
+        });
+        Notify('Video added to playlist', 'info');
+    };
+
     function addFavorite (id) {
         console.log('add to favorite', id);
+    };
+
+    function addToList (id) {
+        addVideoToNextList(id);
+
     };
 
     function removeVideo (id) {
@@ -208,7 +223,7 @@ const App = () => {
                     />
                 </div>
             </div>
-            <MenuContext.Provider value={[addFavorite, removeVideo]}>
+            <MenuContext.Provider value={[addFavorite, removeVideo, addToList]}>
             <div className="Body_aside">
                 {nextVideo.list && nextVideo.list.length > 0 &&
                 <>

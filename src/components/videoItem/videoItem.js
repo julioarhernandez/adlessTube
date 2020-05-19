@@ -6,11 +6,12 @@ import durationConverter from "../../utils/durationConverter";
 import cleanQuotes from "../../utils/cleanQuotes";
 import closeIcon from '../../assets/images/close.svg';
 import starIcon from '../../assets/images/star.svg';
+import addIcon from '../../assets/images/add.svg';
 import DropdownMenu from "../dropdownMenu/dropdownMenu";
 import {MenuContext} from "../app/App";
 
 const VideoItem = ({type, item, duration, views, onClickHandler, index}) => {
-    const [addFavorite, removeVideo] = useContext(MenuContext);
+    const [addFavorite, removeVideo, addToList] = useContext(MenuContext);
     const {
             id: {videoId: id},
             snippet: {title},
@@ -34,6 +35,13 @@ const VideoItem = ({type, item, duration, views, onClickHandler, index}) => {
             handler: (id) => {addFavorite(id)}
         }
     ];
+    if (type === 'results'){
+        listItems.push({
+            icon: addIcon,
+            text: 'Add to list',
+            handler: () => {addToList(item)}
+        })
+    };
     if (type === 'nextVideo'){
         listItems.push({
             icon: closeIcon,
