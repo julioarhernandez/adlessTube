@@ -71,6 +71,9 @@ const App = () => {
 
     function startPlaying(id, type= 'video'){
         setPlayingPL(type === 'playlist');
+        // Set autoplay to false to avoid going to next video
+        // once the video ends playing.
+        setAutoPlay(type === 'playlist');
         setCurrentVideoId(id);
     };
 
