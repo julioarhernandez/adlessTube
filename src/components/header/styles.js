@@ -44,7 +44,12 @@ export const HeaderWrapper = styled.header`
             button{
                 border: 2px solid rgb(228,228,228);
                 background-color: #f1f0ee;
-                min-width: 70px;
+                @media ${mediaQuery.smUp}{
+                    min-width: 70px;
+                }
+                @media ${mediaQuery.sm}{
+                    min-width: 40px;
+                }
                 img{
                     width: 15px;
                 }
@@ -56,6 +61,9 @@ export const HeaderWrapper = styled.header`
         align-items: center;
         img{
             width: 32px;
+            @media ${mediaQuery.sm}{
+                display: none;
+            }
         }
     }
     

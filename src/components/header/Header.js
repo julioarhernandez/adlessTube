@@ -5,6 +5,7 @@ import Search from '../../assets/images/search.svg';
 import User from '../../assets/images/user.svg';
 import Playlist from "../../assets/images/playlist.svg";
 import Toggle from "../commons/Toggle";
+import BurguerMenu from "../burgerMenu";
 
 const Header = ({submitHandler, filterPlaylist, setFilterPlaylist}) => {
     const [term, setTerm] = useState('');
@@ -33,6 +34,15 @@ const Header = ({submitHandler, filterPlaylist, setFilterPlaylist}) => {
             </div>
             <div className="Header_user">
                 <img src={User} alt="user icon"/>
+                <BurguerMenu>
+                    { setOpen => (
+                        <ul onClick={() => setOpen(false)}>
+                            <li>asdasd1</li>
+                            <li>asdasd2</li>
+                            <li>asdasd3</li>
+                        </ul>
+                    )}
+                </BurguerMenu>
             </div>
         </HeaderWrapper>
     );

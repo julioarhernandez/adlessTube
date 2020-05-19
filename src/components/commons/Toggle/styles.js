@@ -34,6 +34,7 @@ export const ToggleWrapper = styled.label`
               opacity: 0;
               width: 0;
               height: 0;
+              margin-left: 0;
             }
             
             .slider {
