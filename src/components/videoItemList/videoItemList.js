@@ -42,6 +42,7 @@ const VideoItemList = ({ items, statistics, onClickHandler, loadMore, token, loa
           itemType = <PlaylistItem
               item={item}
               onClickHandler={onClickHandler}
+              type="results"
           />
       }
     return (

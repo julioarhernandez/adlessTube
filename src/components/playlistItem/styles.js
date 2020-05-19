@@ -50,4 +50,16 @@ export const PlaylistItemWrapper = styled.div`
           }
         }
     }
+    .PlaylistWrapper_body{
+        position: relative;
+        padding-right: 30px;
+    }
+    .PlaylistWrapper_menu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 25px;
+        padding: 0 5px 5px;
+        cursor: pointer;
+    }
 `;
