@@ -140,7 +140,7 @@ const App = () => {
             const response = await fetchRelatedVideos(videoId);
             if (response.data){
                 setNextVideo((vl) => {
-                    return ({list: [...vl.list, ...response.data.items], token: response.data.nextPageToken})
+                    return ({list: [ ...response.data.items], token: response.data.nextPageToken})
                 });
             }else{
                 console.log(response.error);
