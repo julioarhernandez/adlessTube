@@ -9,7 +9,7 @@ import starIcon from "../../assets/images/star.svg";
 import addIcon from "../../assets/images/add.svg";
 import closeIcon from "../../assets/images/close.svg";
 
-const PlaylistItem = ({item, onClickHandler, type}) => {
+const PlaylistItem = ({item, onClickHandler, type, index}) => {
     const [addFavorite, removeVideo, addToList] = useContext(MenuContext);
     const {
             id: {playlistId: id},
@@ -24,7 +24,8 @@ const PlaylistItem = ({item, onClickHandler, type}) => {
     }
     const clickHandler = (e, id, type) => {
         e.preventDefault();
-        onClickHandler(id, type);
+        const clickId = (typeof index !== "undefined" ? index : id);
+        onClickHandler(clickId, type);
     };
     const listItems = [
         {

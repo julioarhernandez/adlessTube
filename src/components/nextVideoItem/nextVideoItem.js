@@ -3,7 +3,7 @@ import {NextVideoItemWrapper} from "./styles";
 import VideoItem from "../videoItem/videoItem";
 import PlaylistItem from "../playlistItem/playlistItem";
 
-const NextVideoItem = ({video, clickVideo, index, removeVideo}) => {
+const NextVideoItem = ({video, clickVideo, index}) => {
     return (
         <NextVideoItemWrapper >
             <div className="NextVideo_body">
@@ -19,6 +19,7 @@ const NextVideoItem = ({video, clickVideo, index, removeVideo}) => {
                      <PlaylistItem
                           item={video}
                           onClickHandler={clickVideo}
+                          index={index}
                           type="nextVideo"
                       />
                 }
